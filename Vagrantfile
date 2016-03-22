@@ -84,6 +84,13 @@ Vagrant.configure(2) do |config|
             server.vm.provision "deploy", type: "ansible" do |ansible|
                 ansible.playbook = "provision/" + sname + "-deploy.yml"
                 ansible.verbose = "vv"
+
+                # load password from file if exists
+                if File.exist?('ansible-password.txt')
+                    ansible.vault_password_file = "ansible-password.txt"
+                else
+                    ansible.ask_vault_pass = true
+                end
             end
 
             ### TEST

@@ -14,6 +14,11 @@
       - ansible_version.major == 2
 
 
+### SECRET VARIABLES
+- name: Load encrypted variables file
+  include_vars: secret-vars.yml
+
+
 ### SYSTEM CONFIGURATION
 - name: Generate locale
   locale_gen:
