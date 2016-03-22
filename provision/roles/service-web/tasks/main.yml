@@ -3,7 +3,8 @@
 #
 ### WEB SERVICE ###
 #
-# Install and configure simple web service.
+# Simple web service deployment with underlying database creation and load
+# balancer join.
 #
 
 - name: Install packages
@@ -19,6 +20,7 @@
   become: yes
 
 
+### DATABASE CREATION
 - name: Create database
   postgresql_db:
     name: dbstats
@@ -50,35 +52,34 @@
   delegate_to: db
 
 
-- name: Install db-stats service
+### DEPLOYMENT
+- name: Install db-stats script
   copy:
     src: static/db-stats/db-stats.py
     dest: /opt/db-stats.py
   become: yes
 
-- name: Kill running db-stats instance
-  shell: pkill gunicorn | true
+- name: Install db-stats service
+  template:
+    src: init/rc.local.j2
+    dest: /etc/rc.local
+  become: yes
 
-- name: Start db-stats instance
-  shell: >
-    nohup gunicorn
-    --name db-service
-    --bind 0.0.0.0:8666
-    db-stats:application &
-  args:
-    chdir: /opt
+- name: Start db-stats service
+  command: /etc/rc.local
+  become: yes
 
 
+### LOAD BALANCER JOIN
 - name: Add web service to load balancer
   shell: >
     sed -i "/# worker-{{ HOST_NUMBER }}/d" /etc/haproxy/haproxy.cfg
     &&
-    echo "server {{ ansible_hostname }}_{{ HOST_NUMBER }} 172.20.20.{{ HOST_NUMBER }}:8666 check observe layer7  # worker-{{ HOST_NUMBER }}"
+    echo "server {{ ansible_hostname }}_{{ HOST_NUMBER }} 172.20.20.{{ HOST_NUMBER }}:8000 check observe layer7  # worker-{{ HOST_NUMBER }}"
     >> /etc/haproxy/haproxy.cfg
     &&
     service haproxy reload
   become: yes
   delegate_to: lb
-
 
 # vim: set ts=8 sts=2 sw=2 et:

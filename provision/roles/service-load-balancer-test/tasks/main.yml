@@ -1,0 +1,13 @@
+---
+
+#
+### LOAD BALANCER TESTS
+#
+
+- name: Test if load balancer is up and running
+  shell: >
+    curl -k -I "http://localhost:80"
+    | grep "HTTP/1.1 200 OK"
+  changed_when: False
+
+# vim: set ts=8 sts=2 sw=2 et:

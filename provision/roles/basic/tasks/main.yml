@@ -3,8 +3,9 @@
 #
 # BASIC SYSTEM CONFIGURATION
 #
-# System update, installation of some basic packages and basic configuration.
-#
+# System update, basic system configuration and installation of some basic
+# packages
+
 
 ### SANITY CHECKS
 - name: Check Ansible version (== 2)
@@ -54,6 +55,5 @@
     - tmux
   environment: "{{ proxy_env }}"
   become: yes
-
 
 # vim: set ts=8 sts=2 sw=2 et:

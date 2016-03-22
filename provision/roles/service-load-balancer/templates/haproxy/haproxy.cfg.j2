@@ -16,14 +16,14 @@ defaults
     timeout client 50000
     timeout server 50000
 
-listen lbstats 0.0.0.0:1936
+listen lbstats 0.0.0.0:8100
     mode http
     stats enable
     stats hide-version
     stats realm Haproxy\ Statistics
     stats uri /
 
-listen lbservice 0.0.0.0:8600
+listen lbservice 0.0.0.0:80
     mode http
     stats enable
     stats hide-version
@@ -35,4 +35,4 @@ listen lbservice 0.0.0.0:8600
     maxconn 1000
     default-server error-limit 1 on-error fail-check fall 1 inter 10s fastinter 5s downinter 120s rise 2 maxconn 100 maxqueue 25 minconn 25 weight 128
 
-    # list of workers
+    # list of worker nodes

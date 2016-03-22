@@ -3,7 +3,7 @@
 #
 ### DATABASE SERVICE - POSTGRESQL/POSTGIS ###
 #
-# Install and configure database server and create GIS template database.
+# Database server deployment and creation of spatial database template.
 #
 
 - name: Install packages
@@ -69,7 +69,6 @@
 
 
 # ROLES
-# groups
 - name: Create database superusers group
   postgresql_user:
     name: dbadmins
@@ -88,7 +87,7 @@
 
 
 # POSTGIS TEMPLATE
-# postgis template database
+# template creation
 - name: Remove template status from PostGIS template database if exists
   command: >
     psql
@@ -125,6 +124,8 @@
   become: yes
   become_user: postgres
 
+
+# permissions
 - name: Set permissions to PostGIS template database
   command: >
     psql
@@ -146,6 +147,8 @@
   become: yes
   become_user: postgres
 
+
+# extensions
 - name: Add PostgreSQL Comparator support to PostGIS template database
   command: >
     psql
@@ -168,6 +171,8 @@
   become: yes
   become_user: postgres
 
+
+# cleanup and final configuration
 - name: Vacuum FREEZE PostGIS template database
   command: >
     psql
@@ -192,6 +197,5 @@
     -c "UPDATE pg_database SET datallowconn='false' WHERE datname='template_postgis';"
   become: yes
   become_user: postgres
-
 
 # vim: set ts=8 sts=2 sw=2 et:

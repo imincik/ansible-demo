@@ -2,8 +2,6 @@
 
 - hosts: all
   roles:
-    - { role: empty, tags: ['empty'] }
-#    - { role: basic-test, tags: ['basic'] }
-#    - { role: service-database-test, tags: ['service-database'] }
+    - { role: service-load-balancer-test, tags: ['service-load-balancer'] }
 
 # vim: set ts=8 sts=2 sw=2 et:

@@ -1,23 +1,55 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Set APT_PROXY environment variable before provisioning to speed up packages
-# installation using Apt proxy.
-# Example:
-#   $ export APT_PROXY=http://192.168.99.118:3142
+#
+### CONFIGURATION SECTION
+#
 
 Vagrant.require_version ">= 1.7.0"
 
 BOX = "trusty-canonical"
 BOX_URL = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box"
 
-HOSTS = {
-    "db" => ["10", "512", "5432", "15432"],
-    "lb" => ["20", "512", "1936", "11936"],
-    "web_1" => ["11", "512", "8666", "18666"],
-    "web_2" => ["12", "512", "8666", "18666"],
+SERVERS = {
+    # database
+    "db" => {
+        "host_number" => "10",
+        "memory" => "512",
+        "ports" => [
+            ["5432", "15432"],
+       ]
+    },
+    # load balancer
+    "lb" => {
+       "host_number" => "20",
+       "memory" => "512",
+        "ports" => [
+            ["8100", "18100"],
+            ["80", "10080"],
+       ]
+    },
+    # web service 1
+    "web_1" => {
+        "host_number" => "11",
+        "memory" => "512",
+        "ports" => [
+            ["8000", "18000"],
+       ]
+    },
+    # web service 2
+    "web_2" => {
+        "host_number" => "12",
+        "memory" => "512",
+        "ports" => [
+            ["8000", "18000"],
+       ]
+    }
 }
 
+
+#
+### DON'T CHANGE ANYTHING UNDER THIS LINE
+#
 
 Vagrant.configure(2) do |config|
 
@@ -27,35 +59,43 @@ Vagrant.configure(2) do |config|
     config.ssh.forward_agent = true
     config.vm.synced_folder '.', '/vagrant'
 
-    HOSTS.each do | (name, cfg) |
-        host_number, memory, port_guest, port_host = cfg
 
+    # loop over all configured servers
+    SERVERS.each do | name, cfg|
         config.vm.define name do |server|
             sname = name.gsub(/_.*/, "")  # server name without number
 
+            # IP address
             server.vm.network "private_network",
-                ip: "172.20.20" + "." + host_number
-            server.vm.hostname = sname
-            server.vm.network "forwarded_port",
-                guest: port_guest,
-                host: port_host,
-                auto_correct: true
+                ip: "172.20.20" + "." + cfg["host_number"]
 
-            # provisioning
-            server.vm.provision "deployment", type: "ansible" do |ansible|
-                ansible.playbook = "provision/" + sname + "-deployment.yml"
+            # hostname
+            server.vm.hostname = sname
+
+            # ports forwarding
+            cfg["ports"].each do | port |
+                server.vm.network "forwarded_port",
+                    guest: port[0],
+                    host: port[1],
+                    auto_correct: true
+            end
+
+            ### DEPLOYMENT
+            server.vm.provision "deploy", type: "ansible" do |ansible|
+                ansible.playbook = "provision/" + sname + "-deploy.yml"
                 ansible.verbose = "vv"
             end
 
-            # test
+            ### TEST
             server.vm.provision "test", type: "ansible" do |ansible|
                 ansible.playbook = "provision/" + sname + "-test.yml"
                 ansible.verbose = "vv"
             end
 
-            # VirtualBox configuration
+            ### PROVIDERS CONFIGURATION
+            # VirtualBox
             server.vm.provider "virtualbox" do |vb, override|
-                vb.customize ["modifyvm", :id, "--memory", memory]
+                vb.customize ["modifyvm", :id, "--memory", cfg["memory"]]
                 vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
                 vb.customize ["modifyvm", :id, "--nictype2", "virtio"]
 #               vb.gui = true
@@ -63,6 +103,5 @@ Vagrant.configure(2) do |config|
         end
     end
 end
-
 
 # vim: set ts=8 sts=4 sw=4 et:
