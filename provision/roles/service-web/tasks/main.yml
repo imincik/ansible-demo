@@ -1,0 +1,84 @@
+---
+
+#
+### WEB SERVICE ###
+#
+# Install and configure simple web service.
+#
+
+- name: Install packages
+  apt:
+    pkg: "{{ item }}"
+    force: yes
+    install_recommends: no
+    state: latest
+  with_items:
+    - gunicorn
+    - python-psycopg2
+  environment: "{{ proxy_env }}"
+  become: yes
+
+
+- name: Create database
+  postgresql_db:
+    name: dbstats
+    encoding: 'UTF-8'
+    template: template_postgis
+    state: present
+  become: yes
+  become_user: postgres
+  delegate_to: db
+
+- name: Create database user
+  postgresql_user:
+    name: dbstats
+    password: dbstats
+    state: present
+  become: yes
+  become_user: postgres
+  delegate_to: db
+
+- name: Grant database user privileges
+  postgresql_privs:
+    db: dbstats
+    type: group
+    objs: dbusers
+    roles: dbstats
+    state: present
+  become: yes
+  become_user: postgres
+  delegate_to: db
+
+
+- name: Install db-stats service
+  copy:
+    src: static/db-stats/db-stats.py
+    dest: /opt/db-stats.py
+  become: yes
+
+- name: Kill running db-stats instance
+  shell: pkill gunicorn | true
+
+- name: Start db-stats instance
+  shell: >
+    nohup gunicorn
+    --name db-service
+    --bind 0.0.0.0:8666
+    db-stats:application &
+  args:
+    chdir: /opt
+
+
+- name: Add web service to load balancer
+  shell: >
+    sed -i "/# worker-{{ HOST_NUMBER }}/d" /etc/haproxy/haproxy.cfg
+    &&
+    echo "server {{ ansible_hostname }}_{{ HOST_NUMBER }} 172.20.20.{{ HOST_NUMBER }}:8666 check observe layer7  # worker-{{ HOST_NUMBER }}"
+    >> /etc/haproxy/haproxy.cfg
+    &&
+    service haproxy reload
+  become: yes
+  delegate_to: lb
+
+
+# vim: set ts=8 sts=2 sw=2 et:

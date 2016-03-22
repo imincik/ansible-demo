@@ -1,0 +1,49 @@
+---
+#
+### HAPROXY SERVER ###
+#
+# Install OWS services load balancer.
+#
+# Logging: syslog
+
+
+- name: Install packages
+  apt:
+    pkg: "{{ item }}"
+    force: yes
+    install_recommends: no
+    state: latest
+  with_items:
+    - haproxy
+  environment: "{{ proxy_env }}"
+  become: yes
+
+
+- name: Activate HAProxy server
+  template:
+    src: haproxy/haproxy.j2
+    dest: /etc/default/haproxy
+  notify:
+    - service haproxy restart
+  become: yes
+
+#- name: Install HAProxy init script
+#  template:
+#    src: init/haproxy.j2
+#    dest: /etc/init.d/haproxy
+#    mode: 0755
+#  notify:
+#    - service haproxy restart
+
+- name: Install HAProxy configuration template
+  template:
+    src: haproxy/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify:
+    - service haproxy restart
+  become: yes
+
+
+- meta: flush_handlers
+
+# vim: set ts=8 sts=2 sw=2 et:

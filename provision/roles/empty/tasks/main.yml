@@ -1,0 +1,14 @@
+---
+
+#
+# EMPTY ROLE
+#
+# Doing nothing useful. Just printing a message.
+#
+
+- name: Print message
+  debug:
+    msg: Hello from '{{ ansible_hostname }}' service !
+
+
+# vim: set ts=8 sts=2 sw=2 et:

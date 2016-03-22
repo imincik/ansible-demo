@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  roles:
+    - { role: empty, tags: ['empty'] }
+#    - { role: basic, tags: ['basic'] }
+#    - { role: service-database, tags: ['service-database'] }
+
+# vim: set ts=8 sts=2 sw=2 et:
