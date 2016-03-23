@@ -23,7 +23,7 @@
 ### DATABASE CREATION
 - name: Create database
   postgresql_db:
-    name: dbstats
+    name: "{{ WEB_DATABASE }}"
     encoding: 'UTF-8'
     template: template_postgis
     state: present
@@ -42,10 +42,10 @@
 
 - name: Grant database user privileges
   postgresql_privs:
-    db: dbstats
+    db: "{{ WEB_DATABASE }}"
     type: group
     objs: dbusers
-    roles: dbstats
+    roles: "{{ WEB_USER_NAME }}"
     state: present
   become: yes
   become_user: postgres
@@ -53,6 +53,12 @@
 
 
 ### DEPLOYMENT
+- name: Install db-stats configuration
+  template:
+    src: db-stats/db-stats.conf.j2
+    dest: /etc/db-stats.conf
+  become: yes
+
 - name: Install db-stats script
   copy:
     src: static/db-stats/db-stats.py
@@ -73,9 +79,9 @@
 ### LOAD BALANCER JOIN
 - name: Add web service to load balancer
   shell: >
-    sed -i "/# worker-{{ HOST_NUMBER }}/d" /etc/haproxy/haproxy.cfg
+    sed -i "/{{ ansible_eth1.ipv4.address }}/d" /etc/haproxy/haproxy.cfg
     &&
-    echo "server {{ ansible_hostname }}_{{ HOST_NUMBER }} 172.20.20.{{ HOST_NUMBER }}:8000 check observe layer7  # worker-{{ HOST_NUMBER }}"
+    echo "server {{ ansible_eth1.ipv4.address }} {{ ansible_eth1.ipv4.address }}:8000 check observe layer7"
     >> /etc/haproxy/haproxy.cfg
     &&
     service haproxy reload

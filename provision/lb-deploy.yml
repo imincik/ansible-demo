@@ -1,6 +1,6 @@
 ---
 
-- hosts: all
+- hosts: lb
   roles:
     - { role: basic, tags: ['basic'] }
     - { role: service-load-balancer, tags: ['service-load-balancer'] }

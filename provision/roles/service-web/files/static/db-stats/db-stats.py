@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 
-
+import os
 import psycopg2
 
 
+if os.path.exists("./db-stats.conf"):
+    CFG = open('./db-stats.conf', 'r').read().split(":")
+else:
+    CFG = open('/etc/db-stats.conf', 'r').read().split(":")
+
+
 def get_stats():
-    output = "DATABASE: dbstats\n"
+    output = "DATABASE: {}\n".format(CFG[0])
     conn = psycopg2.connect(
-                dbname='dbstats',
-                user='dbstats',
-                password='dbstats',
-                host='172.20.20.10'
+                dbname=CFG[0],
+                user=CFG[1],
+                password=CFG[2],
+                host=CFG[3]
     )
     cur = conn.cursor()
     cur.execute("""SELECT table_schema, table_name FROM information_schema.tables;""")

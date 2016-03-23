@@ -6,7 +6,7 @@ The goal of this project is to demonstrate basic principles of automated
 deployment of development and production infrastructure.
 
 **Requirements:**  
-* **Linux or Mac OSX operating system**
+* **Linux** or **Mac OSX** operating system
 * **Git**     - source code storage and versioning
 * **Vagrant** - automated virtual machines provisioning
 * **Ansible** - infrastructure orchestration

@@ -13,7 +13,6 @@ BOX_URL = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-c
 SERVERS = {
     # database
     "db" => {
-        "host_number" => "10",
         "memory" => "512",
         "ports" => [
             ["5432", "15432"],
@@ -21,7 +20,6 @@ SERVERS = {
     },
     # load balancer
     "lb" => {
-       "host_number" => "20",
        "memory" => "512",
         "ports" => [
             ["8100", "18100"],
@@ -30,7 +28,6 @@ SERVERS = {
     },
     # web service 1
     "web_1" => {
-        "host_number" => "11",
         "memory" => "512",
         "ports" => [
             ["8000", "18000"],
@@ -38,12 +35,11 @@ SERVERS = {
     },
     # web service 2
     "web_2" => {
-        "host_number" => "12",
         "memory" => "512",
         "ports" => [
             ["8000", "18000"],
        ]
-    }
+    },
 }
 
 
@@ -67,7 +63,7 @@ Vagrant.configure(2) do |config|
 
             # IP address
             server.vm.network "private_network",
-                ip: "172.20.20" + "." + cfg["host_number"]
+                type: "dhcp"
 
             # hostname
             server.vm.hostname = sname
@@ -83,6 +79,10 @@ Vagrant.configure(2) do |config|
             ### DEPLOYMENT
             server.vm.provision "deploy", type: "ansible" do |ansible|
                 ansible.playbook = "provision/" + sname + "-deploy.yml"
+                ansible.limit = "all"
+                ansible.groups = {
+                    "web" => ["web_1", "web_2"],
+                }
                 ansible.verbose = "vv"
 
                 # load password from file if exists
@@ -96,6 +96,10 @@ Vagrant.configure(2) do |config|
             ### TEST
             server.vm.provision "test", type: "ansible" do |ansible|
                 ansible.playbook = "provision/" + sname + "-test.yml"
+                ansible.limit = "all"
+                ansible.groups = {
+                    "web" => ["web_1", "web_2"],
+                }
                 ansible.verbose = "vv"
             end
 

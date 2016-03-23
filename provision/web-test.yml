@@ -1,6 +1,12 @@
 ---
 
-- hosts: all
+- hosts:
+    - db
+    - lb
+  name: Gather facts from other servers
+  tasks: [ ]
+
+- hosts: web
   roles:
     - { role: service-web-test, tags: ['service-web'] }
 

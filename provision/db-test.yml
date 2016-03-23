@@ -1,6 +1,6 @@
 ---
 
-- hosts: all
+- hosts: db
   roles:
     - { role: service-database-test, tags: ['service-database'] }
 
