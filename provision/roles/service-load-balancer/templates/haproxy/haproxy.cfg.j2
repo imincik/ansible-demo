@@ -33,6 +33,6 @@ listen lbservice 0.0.0.0:80
     balance static-rr
     fullconn 150
     maxconn 1000
-    default-server error-limit 1 on-error fail-check fall 1 inter 10s fastinter 5s downinter 120s rise 2 maxconn 100 maxqueue 25 minconn 25 weight 128
+    default-server error-limit 1 on-error fail-check fall 1 inter 2s fastinter 2s downinter 2s rise 2 maxconn 100 maxqueue 25 minconn 25 weight 128
 
     # list of worker nodes
