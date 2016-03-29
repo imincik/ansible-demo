@@ -212,7 +212,7 @@ List of users:
 ```
 
 ### Tasks delegation
-* asking 'db' service to create user account from 'web' service
+* ask 'db' service to create user account from 'web' service
 ```yaml
 - name: Create 'dbuser' account in PostgreSQL db
   postgresql_user:
@@ -220,6 +220,16 @@ List of users:
     password: dbuser_password
     state: present
   delegate_to: db
+```
+
+* ask 'lb' service to remove web server from load balancer before running maintenance
+```yaml
+- name: Remove server from load balancer
+  shell: >
+    sed -i "/server {{ ansible_eth1.ipv4.address }}/d" /etc/haproxy/haproxy.cfg
+    &&
+    service haproxy reload
+  delegate_to: lb
 ```
 
 ### Tests
