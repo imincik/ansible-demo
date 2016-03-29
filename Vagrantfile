@@ -39,7 +39,7 @@ SERVERS = {
         "ports" => [
             ["8000", "18000"],
        ]
-    },
+    }
 }
 
 
@@ -57,16 +57,15 @@ Vagrant.configure(2) do |config|
 
 
     # loop over all configured servers
-    SERVERS.each do | name, cfg|
+    SERVERS.each do | (name, cfg) |
         config.vm.define name do |server|
-            sname = name.gsub(/_.*/, "")  # server name without number
 
             # IP address
             server.vm.network "private_network",
                 type: "dhcp"
 
             # hostname
-            server.vm.hostname = sname
+            server.vm.hostname = name.gsub("_", "-")
 
             # ports forwarding
             cfg["ports"].each do | port |
@@ -77,6 +76,7 @@ Vagrant.configure(2) do |config|
             end
 
             ### DEPLOYMENT
+            sname = name.gsub(/_.*/, "")  # server name without number
             server.vm.provision "deploy", type: "ansible" do |ansible|
                 ansible.playbook = "provision/" + sname + "-deploy.yml"
                 ansible.limit = "all"
