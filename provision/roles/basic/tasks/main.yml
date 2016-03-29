@@ -1,11 +1,22 @@
 ---
 
+################################################################################
+#
+# Copyright 2013 Crown copyright (c)
+# Land Information New Zealand and the New Zealand Government.
+# All rights reserved
+#
+# This program is released under the terms of the new BSD license. See the
+# LICENSE file for more information.
+#
+################################################################################
+
 #
 # BASIC SYSTEM CONFIGURATION
 #
 # System update, basic system configuration and installation of some basic
-# packages
-
+# packages.
+#
 
 ### SANITY CHECKS
 - name: Check Ansible version (== 2)
