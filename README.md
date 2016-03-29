@@ -252,6 +252,14 @@ end
 ```
 
 ### Commands
+ * **vagrant up**         - start VM(s)
+ * **vagrant status**     - check VM(s) status
+ * **vagrant provision**  - run provisioner once VM(s) is up (after code update)
+ * **vagrant ssh**        - connect to VM(s)
+ * **vagrant halt**       - halt VM(s)
+ * **vagrant destroy**    - delete VM(s)
+
+
 
 
 # Infrastructure
@@ -321,7 +329,7 @@ $ sudo apt-get -f install
 $ git clone <GIT-REPOSITORY-URL>
 ```
 
-* start infrastructure in virtual machines  
+* start all services in virtual machines  
 ```
 $ vagrant up
 ```
@@ -342,7 +350,7 @@ $ vagrant provision
 $ vagrant ssh <VM-NAME>
 ```
 
-* shutdown whole infrastructure  
+* shutdown all services  
 ```
 $ vagrant halt
 ```
