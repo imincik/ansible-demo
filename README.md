@@ -300,20 +300,20 @@ end
 ## Installation instructions - Ubuntu 14.04
 ### Ansible
 * add Ansible repository  
-```
+```sh
 $ sudo apt-get install software-properties-common
 $ sudo apt-add-repository ppa:ansible/ansible
 $ sudo apt-get update
 ```
 
 * install Ansible  
-```
+```sh
 $ sudo apt-get install ansible
 ```
 
 ### VirtualBox
 * install Dynamic Kernel Module Support Framework  
-```
+```sh
 $ sudo apt-get install dkms
 ```
 
@@ -321,7 +321,7 @@ $ sudo apt-get install dkms
   https://www.virtualbox.org/wiki/Downloads  
 
 * install missing dependencies  
-```
+```sh
 $ sudo apt-get -f install
 ```
 
@@ -330,7 +330,7 @@ $ sudo apt-get -f install
   http://www.vagrantup.com/downloads.html  
 
 * install missing dependencies  
-```
+```sh
 $ sudo apt-get -f install
 ```
 
