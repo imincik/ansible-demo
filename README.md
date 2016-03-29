@@ -222,7 +222,7 @@ List of users:
   delegate_to: db
 ```
 
-* ask 'lb' service to remove web server from load balancer before running maintenance
+* ask 'lb' service to remove 'web' server from load balancer before running maintenance
 ```yaml
 - name: Remove server from load balancer
   shell: >
