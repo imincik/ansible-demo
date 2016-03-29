@@ -89,7 +89,7 @@ USERS:
 ```
 
 * variable usage in template and resulting file produced  
-```markup
+```html+jinja
 {% if DEBUG %}
 Running in debug mode !
 {% endif %}
