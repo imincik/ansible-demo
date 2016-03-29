@@ -15,11 +15,11 @@ deployment of development and production infrastructure.
 # Basic knowledge
 ## YAML
 
-A straightforward machine parseable data serialization format designed for human
-readability and interaction with scripting languages such as Perl and Python.
+A straightforward machine parseable data serialization format designed for:
+* human readability
+* interaction with scripting languages
 
 ## Ansible
-
 Ansible is written in Python and it is using YAML for configuration. It is using
 SSH to connect to servers. Ansible executes *playbooks*, which are the
 definitions of tasks and environment to execute.  
@@ -32,7 +32,6 @@ Whole process of playbook execution must be *idempotent*.
 
 
 ### Tasks
-
 * create PostgreSQL user using 'shell' module (non-idempotent)  
 ```yaml
 - name: Create 'dbuser' account in PostgreSQL db
@@ -59,7 +58,6 @@ Whole process of playbook execution must be *idempotent*.
 ```
 
 ### Variables
-
 * variable declaration  
 ```yaml
 DATABASE_USER_NAME: dbuser
@@ -76,7 +74,6 @@ DATABASE_USER_PASSWORD: dbuser
 ```
 
 ### Templates (jinja2)
-
 * variables declaration  
 ```yaml
 DEBUG: yes
@@ -117,7 +114,6 @@ List of users:
 ```
 
 ### Handlers
-
 * handler declaration  
 ```yaml
 - name: service postgresql restart
@@ -146,7 +142,6 @@ List of users:
 ```
 
 ### Roles
-
 * **role** - collection of tasks, templates, handlers and variables creating
              usually one service. Roles can be reusable !  
 
@@ -159,7 +154,6 @@ List of users:
 ```
 
 ### Directories structure
-
 ```
 ├── group_vars
 │   └── all
@@ -262,28 +256,22 @@ end
 
 
 
-# Infrastructure
+# Quick Start
 ## Services
-
-List of implemented services:  
+Implemented services:  
 * db  - database service
 * web - web service (simple app returning some data from db)
 * lb  - load balancer service on top of the web service
 
-## Ports
-
-List of active TCP ports forwarded from VMs to host machine:  
+Active TCP ports forwarded from VMs to host machine:  
 * db  - PostgreSQL          - vm: 5432, host: 15432
 * lb  - load balancer stats - vm: 8100, host: 18100
 * lb  - web service         - vm: 80,   host: 10080
 * web - web service         - vm: 8000, host: 18000
 
 
-
-# Quick Start
 ## Installation instructions - Ubuntu 14.04
 ### Ansible
-
 * add Ansible repository  
 ```
 $ sudo apt-get install software-properties-common
@@ -297,7 +285,6 @@ $ sudo apt-get install ansible
 ```
 
 ### VirtualBox
-
 * install Dynamic Kernel Module Support Framework  
 ```
 $ sudo apt-get install dkms
@@ -312,7 +299,6 @@ $ sudo apt-get -f install
 ```
 
 ### Vagrant
-
 * download and install latest Vagrant package from
   http://www.vagrantup.com/downloads.html  
 
@@ -323,7 +309,6 @@ $ sudo apt-get -f install
 
 
 ## Deployment
-
 * clone source code from Git  
 ```
 $ git clone <GIT-REPOSITORY-URL>
@@ -334,23 +319,7 @@ $ git clone <GIT-REPOSITORY-URL>
 $ vagrant up
 ```
 
-* check infrastructure status  
+* delete all services  
 ```
-$ vagrant status
-```
-
-* perform update  
-```
-$ git pull
-$ vagrant provision
-```
-
-* connect to VM  
-```
-$ vagrant ssh <VM-NAME>
-```
-
-* shutdown all services  
-```
-$ vagrant halt
+$ vagrant destroy
 ```
