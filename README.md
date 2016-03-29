@@ -258,12 +258,12 @@ end
 
 # Quick Start
 ## Services
-Implemented services:  
+**Implemented services:**  
 * db  - database service
 * web - web service (simple app returning some data from db)
 * lb  - load balancer service on top of the web service
 
-Active TCP ports forwarded from VMs to host machine:  
+**Active TCP ports forwarded from VMs to host machine:**  
 * db  - PostgreSQL          - vm: 5432, host: 15432
 * lb  - load balancer stats - vm: 8100, host: 18100
 * lb  - web service         - vm: 80,   host: 10080
@@ -310,16 +310,21 @@ $ sudo apt-get -f install
 
 ## Deployment
 * clone source code from Git  
-```
+```shell
 $ git clone <GIT-REPOSITORY-URL>
 ```
 
 * start all services in virtual machines  
-```
+```shell
 $ vagrant up
 ```
 
-* delete all services  
+* launch load balancer stats and web services in web browser  
+```shell
+$ firefox http://localhost:18100/ http://localhost:10080/
 ```
+
+* delete all services  
+```shell
 $ vagrant destroy
 ```
