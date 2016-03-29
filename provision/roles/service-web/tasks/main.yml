@@ -79,7 +79,7 @@
 ### LOAD BALANCER JOIN
 - name: Add web service to load balancer
   shell: >
-    sed -i "/{{ ansible_eth1.ipv4.address }}/d" /etc/haproxy/haproxy.cfg
+    sed -i "/server {{ ansible_eth1.ipv4.address }}/d" /etc/haproxy/haproxy.cfg
     &&
     echo "server {{ ansible_eth1.ipv4.address }} {{ ansible_eth1.ipv4.address }}:8000 check observe layer7"
     >> /etc/haproxy/haproxy.cfg
