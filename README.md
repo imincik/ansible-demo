@@ -238,11 +238,8 @@ Vagrant.configure(2) do |config|
 
   # VirtualBox machine configuration
   config.vm.provider "virtualbox" do |vb|
-    # display the VirtualBox GUI when booting the machine
-    vb.gui = true
-
-    # customize the amount of memory on the VM
-    vb.memory = "1024"
+    vb.gui = true      # launch VirtualBox GUI console
+    vb.memory = "1024" # customize the amount of memory on the VM
   end
 
   # start shell provisioner by direct code injection
@@ -250,11 +247,11 @@ Vagrant.configure(2) do |config|
     sudo apt-get update
     sudo apt-get install -y postgresql-9.3
   SHELL
+
 end
 ```
 
 ### Commands
-### Shared directory
 
 
 # Infrastructure
