@@ -2,7 +2,6 @@
 
 - hosts:
     - db
-    - lb
   name: Gather facts from other servers
   tasks: [ ]
 
