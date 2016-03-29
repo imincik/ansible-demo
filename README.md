@@ -225,8 +225,31 @@ List of users:
 * configuration file written in Ruby  
 ```ruby
 Vagrant.configure(2) do |config|
+
+  # basic OS image
   config.vm.box = "trusty-canonical"
   config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box"
+
+  # shared directory between host OS and VM
+  config.vm.synced_folder '.', '/vagrant'
+
+  # ports forwarding
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # VirtualBox machine configuration
+  config.vm.provider "virtualbox" do |vb|
+    # display the VirtualBox GUI when booting the machine
+    vb.gui = true
+
+    # customize the amount of memory on the VM
+    vb.memory = "1024"
+  end
+
+  # start shell provisioner by direct code injection
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get update
+    sudo apt-get install -y postgresql-9.3
+  SHELL
 end
 ```
 
