@@ -337,21 +337,26 @@ $ sudo apt-get -f install
 
 ## Deployment
 * clone source code from Git  
-```shell
+```sh
 $ git clone <GIT-REPOSITORY-URL>
 ```
 
+* set APT_PROXY variable to Apt caching server if available (optional)  
+```sh
+$ export APT_PROXY=http://<IP-ADDRESS>:<PORT>
+```
+
 * start all services in virtual machines  
-```shell
+```sh
 $ vagrant up
 ```
 
 * launch load balancer stats and web services in web browser  
-```shell
+```sh
 $ firefox http://localhost:18100/ http://localhost:10080/
 ```
 
 * delete all services  
-```shell
+```sh
 $ vagrant destroy
 ```
