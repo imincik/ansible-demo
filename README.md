@@ -40,7 +40,7 @@ Whole process of playbook execution must be *idempotent*.
 ```
 
 * create PostgreSQL user using 'postgresql_user' module (idempotent)  
-```
+```yaml
 - name: Create 'dbuser' account in PostgreSQL db
   postgresql_user:
     name: dbuser
@@ -49,7 +49,7 @@ Whole process of playbook execution must be *idempotent*.
 ```
 
 # install PostgreSQL (idempotent)
-```
+```yaml
 - name: Install PostgreSQL
   apt:
     pkg: postgresql-9.3
@@ -61,13 +61,13 @@ Whole process of playbook execution must be *idempotent*.
 ### Variables
 
 * variable declaration  
-```
+```yaml
 DATABASE_USER_NAME: dbuser
 DATABASE_USER_PASSWORD: dbuser
 ```
 
 * variable usage in task  
-```
+```yaml
 - name: Create 'dbuser' account in PostgreSQL db
   postgresql_user:
     name: "{{ DATABASE_USER_NAME }}"
@@ -78,7 +78,7 @@ DATABASE_USER_PASSWORD: dbuser
 ### Templates (jinja2)
 
 * variables declaration  
-```
+```yaml
 DEBUG: yes
 
 # list of users
@@ -109,7 +109,7 @@ List of users:
 ```
 
 * template deployment using 'template' module  
-```
+```yaml
 - name: Configure PostgreSQL access policy
   template:
     src: postgresql/pg_hba.conf.j2
@@ -119,7 +119,7 @@ List of users:
 ### Handlers
 
 * handler declaration  
-```
+```yaml
 - name: service postgresql restart
   service:
     name: postgresql
@@ -127,7 +127,7 @@ List of users:
 ```
 
 * handler activation  
-```
+```yaml
 - name: Configure PostgreSQL access policy
   template:
     src: postgresql/pg_hba.conf.j2
