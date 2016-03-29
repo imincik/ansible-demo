@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import socket
 import psycopg2
 
 
@@ -19,10 +20,21 @@ def get_stats():
                 host=CFG[3]
     )
     cur = conn.cursor()
-    cur.execute("""SELECT table_schema, table_name FROM information_schema.tables;""")
+    cur.execute("""
+        SELECT
+            nspname || '.' || relname,
+            pg_size_pretty(pg_relation_size(C.oid))
+        FROM pg_class C
+        LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+        WHERE nspname NOT IN ('pg_catalog', 'information_schema')
+        ORDER BY pg_relation_size(C.oid) DESC
+        LIMIT 20;
+    """)
     recs = cur.fetchall()
     for rec in recs:
-        output += "* {0}.{1}\n".format(*rec)
+        output += " * {0} - {1}\n".format(*rec)
+
+    output += "\nResponse from: {}\n".format(socket.gethostname())
     conn.close()
 
     return str(output)
