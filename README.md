@@ -13,6 +13,11 @@ deployment of development and production infrastructure.
 
 
 # Basic knowledge
+## YAML
+
+A straightforward machine parseable data serialization format designed for human
+readability and interaction with scripting languages such as Perl and Python.
+
 ## Ansible
 
 Ansible is written in Python and it is using YAML for configuration. It is using
@@ -29,7 +34,7 @@ Whole process of playbook execution must be *idempotent*.
 ### Tasks
 
 * create PostgreSQL user using 'shell' module (non-idempotent)  
-```
+```yaml
 - name: Create 'dbuser' account in PostgreSQL db
   shell: createuser dbuser
 ```
@@ -41,6 +46,16 @@ Whole process of playbook execution must be *idempotent*.
     name: dbuser
     password: dbuser_password
     state: present
+```
+
+# install PostgreSQL (idempotent)
+```
+- name: Install PostgreSQL
+  apt:
+    pkg: postgresql-9.3
+    force: yes
+    install_recommends: no
+    state: latest
 ```
 
 ### Variables
@@ -73,16 +88,24 @@ USERS:
   - joe
 ```
 
-* variable usage in template  
+* variable usage in template and resulting file produced  
 ```
 {% if DEBUG %}
-Running in debug mode
+Running in debug mode !
 {% endif %}
 
 List of users:
 {% for user in USERS %}
   * {{ user }}
 {% endfor %}
+```
+```
+Running in debug mode !
+
+List of users:
+  * ivan
+  * simon
+  * joe
 ```
 
 * template deployment using 'template' module  
