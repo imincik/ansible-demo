@@ -212,6 +212,23 @@ List of users:
 ```
 
 ### Tasks delegation
+* asking 'db' service to create user account from 'web' service
+```yaml
+- name: Create 'dbuser' account in PostgreSQL db
+  postgresql_user:
+    name: dbuser
+    password: dbuser_password
+    state: present
+  delegate_to: db
+```
+
+### Tests
+* integration test - test if database is running
+```yaml
+- name: Test if database is up and running
+  shell: >
+    psql -U postgres -d postgres -tAc "SELECT version()"
+```
 
 
 ## Vagrant
@@ -256,7 +273,7 @@ end
 
 
 
-# Quick Start
+# Demonstration
 ## Services
 **Implemented services:**  
 * db  - database service
